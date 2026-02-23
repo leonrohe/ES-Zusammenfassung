@@ -1,0 +1,67 @@
+\section{Ausführungsdauer}
+\subsection*{Relevanz für Echtzeitsysteme}
+\begin{itemize}
+    \item \textbf{Harte Echtzeitsysteme:} Nur WCET ist relevant, Deadline darf nicht überschritten werden
+    \item $\textbf{Gesamtlatenz} = \text{Ausführungsdauer}~+~\text{Kommunikationszeit}$ (beide im Worst Case betrachten)
+\end{itemize}
+\subsection*{Interrupt Klassifizierung}
+\begin{itemize}
+    \item Hängt von physischer Anbindung ab, nicht vom auslösenden Ereignis
+    \item Anschluss an Interrupt-Eingang $\Rightarrow$ \textit{externe} Unterbrechungsquelle
+    \item Anschluss an E/A-Schnittstelle $\Rightarrow$ \textit{interne} Unterbrechungsquelle
+\end{itemize}
+
+\section{Zähler \& Zeitgeber}
+\subsection*{Periodischer Impuls mit Zähler}
+\begin{itemize}
+    \item Zähler startet mit $S > 0$ und zählt herunter
+    \item Bei Unterlauf: Erzeuge Impuls und Rücksetzen auf $S$\\
+    $\Rightarrow$ Puls hat Periodendauer $T = (S + 1) \cdot \text{Taktzykluszeit}$
+    \item $\text{Taktzykluszeit} = \frac{1}{f_{CLK}}$
+    \item $S = \frac{T}{\text{Taktzykluszeit}}-1$
+    \item \textbf{Verlängerung der Zeitspanne:}
+    \begin{itemize}
+        \item \textbf{Hardware:} Eingabetakt des Zählers mit Frequenzteiler reduzieren, aber Genauigkeit der Zeitmessung sinkt
+        \item \textbf{Software:} Bei Zählregisterüberlauf den Wert eines anderen Registers inkrementieren, aber zusätzlicher Aufwand in Software
+    \end{itemize}
+\end{itemize}
+
+\section{DA-Wandlung}
+\subsection*{4-Bit R/2R-Wandler}
+\includegraphics[width=\textwidth]{images/r2r.png}
+\begin{itemize}
+    \item Aufbau aus einem einzigen Widerstandswert $R$
+    \item Jedes Bit steuert einen Schalter: Stellung \texttt{1} zur Ausgangsschiene,
+          Stellung \texttt{0} zur Blindschiene (Masse)
+    \item Parallelschaltung zweier $2R$-Widerstände ergibt stets $R$
+          $\Rightarrow$ Spannung halbiert sich von Knoten zu Knoten:
+          $U_\text{ref},\; \frac{U_\text{ref}}{2},\; \frac{U_\text{ref}}{4},\; \ldots$
+    \item Knotenregel liefert den Summenstrom an der Ausgangsschiene:
+          $I_k = z_{n-1}\frac{U_\text{ref}}{2R} + z_{n-2}\frac{U_\text{ref}}{4R} + \cdots$
+    \item Operationsverstärker hält Eingang auf virtuellem Masse-Potential und
+          wandelt $I_k$ in eine Ausgangsspannung:
+          $U = -R \cdot I_k = -Z \cdot \dfrac{U_\text{ref}}{2^n}$
+    \item $R$ kürzt sich heraus -- Ausgabe hängt ausschließlich von $Z$ und
+          $U_\text{ref}$ ab
+\end{itemize}
+
+\subsection*{Wandlungsformel}
+\begin{itemize}
+    \item Direkte Berechnung der Ausgangsspannung:
+          $U = Z \cdot \frac{U_\text{ref}}{2^n}$
+    \item Auflösung: $U_\text{LSB} = \frac{U_\text{ref}}{2^n}$ -- mehr Bits $\Rightarrow$ feinere Stufen
+    \item $U_\text{max} = (2^n - 1) \cdot U_\text{LSB}$ -- der Wandler erreicht $U_\text{ref}$
+          nie vollständig
+\end{itemize}
+
+\subsection*{Fehlerkorrektur}
+\begin{itemize}
+    \item \textbf{Nullpunktfehler:} Kennlinie parallel zur Idealkurve, aber verschoben
+          $\Rightarrow$ Korrektur durch Subtraktion eines Offsets $U_0$
+    \item \textbf{Vollausschlagfehler:} Abweichende Steigung $\frac{\Delta U}{\Delta Z}$
+          $\Rightarrow$ Korrektur durch Multiplikation mit Faktor $c$
+    \item \textbf{Nichtlinearitätsfehler:} entstehen durch Bauteil-Toleranzen und
+          Temperaturabhängigkeiten -- entziehen sich linearer Kompensation und erfordern
+          aufwändigere Kalibrierverfahren
+\end{itemize}
+
