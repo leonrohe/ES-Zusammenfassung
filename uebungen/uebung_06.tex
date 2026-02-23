@@ -1,0 +1,85 @@
+\section{Pulsweitenmodulation}
+\begin{itemize}
+    \item Erzeugt ein Signal mit konstanter Periode, aber variablem Tastverhätnis
+    \item Mit Tastverhältnis z.B. Helligkeit einstellbar
+    \item Relevante Größen:
+    \begin{itemize}
+        \item Takt $f_{\text{CLK}}$
+        \item Einstellbarer Frequenzteiler im Verhältnis 1 : $2^n$
+        \item Frequenz des Ausgabesignals: $f_{\text{PWM}} = \frac{f_{\text{CLK}}}{2^n}$
+        \begin{itemize}
+            \item Zu Beginn jeder Periode liegt das Signal für eine bestimmte Zeit $t_{\text{PWM}}$ auf 0: \\
+            $t_{\text{PWM}} = \text{Tastverhätnis} \cdot \frac{1}{f_{\text{CLK}}}$ mit $0 \leq \text{Tastverhätnis} \leq 2^n$
+            \item Den Rest der Periode liegt das Signal auf 1
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\section{DMA}
+
+\subsection*{Polling vs. Interrupts vs. DMA}
+\begin{itemize}
+    \item \textbf{Polling:} Zyklische Abfrage durch den Prozessor; Latenz bestimmbar, aber Datenübertragung belastet den Prozessor
+    \item \textbf{Interrupts:} Prozessor wird nur bei E/A-Ereignissen unterbrochen; Datenübertragung weiterhin durch Prozessor; maximale Latenz \emph{nicht} bestimmbar (abhängig von Priorität und Häufigkeit gleichzeitiger Ereignisse)
+    \item \textbf{DMA:} Datenübertragung vollständig durch DMA-Controller; Prozessor initialisiert Kanäle und wird per Interrupt bei Abschluss benachrichtigt; maximale Latenz bei dynamischer Priorisierung garantierbar
+\end{itemize}
+
+\subsection*{Vorteile von DMA}
+\begin{itemize}
+    \item Prozessor wird entlastet: Übertragung läuft ohne Prozessorbeteiligung
+    \item Mehrere Kanäle über ein gemeinsames Steuerwerk realisierbar; pro Kanal eigene Register und Peripherieschnittstellen
+    \item Dynamische Priorisierung (genutzter Kanal erhält niedrigste Priorität) verhindert Verhungern und garantiert eine maximale Latenz
+\end{itemize}
+
+\subsection*{Probleme bei unterschiedlichen Wortbreiten}
+\begin{itemize}
+    \item Quelle $>$ Ziel: Zerlegung nötig $\Rightarrow$ mehrere Schreibzugriffe pro Lesezugriff
+    \item Quelle $<$ Ziel: Zusammenfügen nötig $\Rightarrow$ mehrere Lesezugriffe pro Schreibzugriff
+    \item Fly-By-Transfer: Wortbreiten müssen identisch sein
+    \item \textbf{Lösung:} DMA-Controller benötigt Puffer zum Zerlegen/Zusammenfügen, muss unterschiedliche Wortbreiten erkennen und Adresszähler korrekt inkrementieren \\ \textit{Bsp.: 4-Byte-Quelle, 2-Byte-Ziel $\Rightarrow$ Zähler um 1 (Quelle) bzw. 2 (Ziel) erhöhen}
+\end{itemize}
+
+\section{Abtastrate}
+\begin{itemize}
+    \item Gemäß dem \textbf{Abtasttheorem} muss ein Signal mit mehr als der doppelten
+          maximalen Signalfrequenz abgetastet werden:
+          \[
+              f_{\text{Abtast}} > 2 \cdot f_{\text{max}}
+          \]
+    \item Nur so kann das ursprüngliche Signal korrekt rekonstruiert werden
+    \item \textbf{Alias-Effekt:} Tritt auf, wenn $f_{\text{Abtast}} < 2 \cdot f_{\text{max}}$
+    \begin{itemize}
+        \item Das Signal wird falsch rekonstruiert -- es entsteht ein Scheinsignal
+              (Alias) mit niedrigerer Frequenz
+        \item Bei $f_{\text{Abtast}} = 2 \cdot f_{\text{max}}$: Frequenz rekonstruierbar,
+              aber Amplitude nicht mehr korrekt bestimmbar
+    \end{itemize}
+\end{itemize}
+
+\section{Signalprozessoren}
+\begin{itemize}
+    \item Speziell für die Verarbeitung digitaler Signale (Audio, Video) ausgelegt
+    \item \textbf{Maximale Instruktionen pro Abtastperiode} begrenzen die mögliche
+          Signalverarbeitung:
+          \[
+              \text{Instruktionen pro Periode} = \frac{f_{\text{CLK}}}{f_{\text{Abtast}}}
+          \]
+          \textit{Bsp.: $f_{\text{CLK}} = \SI{10}{\mega\hertz}$,
+          $f_{\text{Abtast}} > \SI{60}{\kilo\hertz}$
+          $\Rightarrow$ max. $\approx 166$ Instruktionen pro Abtastperiode}
+    \item \textbf{Relevante Eigenschaften der Laplace-Transformation:}
+    \begin{itemize}
+        \item Linearkombination:
+              $a_1 f_1(t) + a_2 f_2(t) \;\Rightarrow\; a_1 F_1(s) + a_2 F_2(s)$
+        \item Dämpfung im Zeitbereich $\Rightarrow$ Verschiebung im Frequenzbereich:
+              $e^{at} f(t) \;\Rightarrow\; F(s - a)$
+        \item Integration im Zeitbereich $\Rightarrow$ Multiplikation mit $\frac{1}{s}$:
+              $\int_0^t f(\tau)\, d\tau \;\Rightarrow\; \frac{1}{s} F(s)$
+    \end{itemize}
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+    \includegraphics[width=\textwidth]{images/signalprozessor.png}
+\end{center}
