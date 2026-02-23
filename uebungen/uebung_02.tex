@@ -1,0 +1,139 @@
+\section{Mikrocontroller}
+\subsection*{Schalenmodell}
+\begin{center}
+    \includegraphics[width=0.65\textwidth]{images/schalenmodell.png}    
+\end{center}
+\begin{itemize} 
+    \item \textbf{Prozessorkern:}
+    \begin{itemize}
+        \item Auf die Aufgabe zugeschnitten
+    \end{itemize}
+    \item \textbf{Scheib-/Lesespeicher:}
+    \begin{itemize}
+        \item Speicherung von Daten, unterschiedliche Größe je nach Anwendung
+    \end{itemize}
+    \item \textbf{Festwertspeicher:}
+    \begin{itemize}
+        \item Speicherung von Programmen und Konstanten
+        \item Je nach Anwendung andere Größe und Typ (ROM, PROM, \dots)
+    \end{itemize}
+    \item \textbf{Serielle und parallele Ein-/Ausgabekanäle:}
+    \begin{itemize}
+        \item Digitale Schnittstelle
+        \item Asynchrone oder synchrone Datenübertragung
+    \end{itemize}
+    \item \textbf{AD/DA-Wandler:}
+    \begin{itemize}
+        \item Analoge Schnittstelle
+        \item Wichtige Faktoren: Auflösung, Wandlungszeit, Spannungsbereich und Wandlungsfehler
+    \end{itemize}
+    \item \textbf{Zähler \& Zeitgeber:}
+    \begin{itemize}
+        \item Messung von Zeiten, Zählen von Ereignissen, Pulsweitenmodulation, \dots
+        \item Wichtig für viele Echtzeitanwendungen
+    \end{itemize}
+    \item \textbf{Watchdog:}
+    \begin{itemize}
+        \item Überwacht Programm auf in regelmäßigen Abständen gesendete Lebenszeichen
+        \item Bei Ausbleiben des Lebenszeichen $\Rightarrow$ Annahme eines Fehlers und Reset
+    \end{itemize}
+    \item \textbf{Echtzeitkanäle:}
+    \begin{itemize}
+        \item Echtzeiterweiterung: parallelen E/A-Kanal mit Zeitgeber koppeln
+        \item Ein-/Ausgabezeitpunkt wird durch Hardware gesteuert $\Rightarrow$ Jitter vermieden
+    \end{itemize}
+    \item \textbf{Interrupts:}
+    \begin{itemize}
+        \item Reaktion auf Ereignisse, z.B. durch Eingangssignale, Zählerm Zeitgeber, \dots
+    \end{itemize}
+    \item \textbf{DMA (Direct Memory Access):}
+    \begin{itemize}
+        \item Direkter Datentransfer zwischen Peripherie und Speicher ohne Beteiligung des Prozessorkerns
+        \item Prozessorkern wird entlastet und kann währenddessen andere Aktivitäten ausführen
+    \end{itemize}
+    \item \textbf{Ruhebetrieb:}
+    \begin{itemize}
+        \item Für Batterie- bzw. Akkubetrieb wichtig
+    \end{itemize}
+    \item \textbf{Erweiterungsbus:}
+    \begin{itemize}
+        \item Anschluss externen Komponenten
+    \end{itemize}
+\end{itemize}
+    
+\subsection*{Mikrocontroller vs. System-on-Chip}
+\begin{itemize}
+    \item \textbf{Mikrocontroller:}
+    \begin{itemize}
+        \item Bausteine auf dem Chip: CPU, Speicher, E/A-Schnittstelle
+        \item Erweiterung durch weitere externe Bausteine $\Rightarrow$ anwendungsspezifisches System
+    \end{itemize}
+    \item \textbf{System-on-Chip:}
+    \begin{itemize}
+        \item Weiterentwicklung der Mikrocontroller-Idee
+        \item Weitere Bausteine auf Chip integriert $\Rightarrow$ anwendungsspezifisches System
+    \end{itemize}
+\end{itemize}
+
+\section{Energiespartechniken}
+\subsection*{Formeln}
+\begin{itemize}
+    \item \textbf{Leistungsaufnahme $P$:}
+    \begin{itemize}
+        \item statischer Anteil $P_s$ (Leckströme)
+        \item dynamischer Anteil $P_d$ (abhägig von Taktfrequenz $F$)
+        \item $P = P_s + P_d = c_s + c_d \cdot F$
+    \end{itemize}
+    \item \textbf{Ausführungsdauer $T_a$ (umgekehrt proportional zur Taktfrequenz)}
+    \begin{itemize}
+        \item mit Proportionalitätsfaktor $c_a$ folgt $T_a = \frac{c_a}{F}$
+    \end{itemize}
+    \item \textbf{Energieverbrauch  $E_a$ (bei konstanter Leistungsaufnahme)}
+    \begin{itemize}
+        \item $E_a = P \cdot T_a = P \cdot \frac{c_a}{F} = (c_s + c_d \cdot F) \cdot \frac{c_a}{F} = \frac{c_s \cdot c_a}{F} + d_c \cdot c_a$
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Energiespartechniken}
+\begin{itemize}
+    \item \textbf{Taktfrequenzreduktion:}
+    \begin{itemize}
+        \item Reduktion der Taktfrequenz senkt die Leistungsaufnahme
+              (dynamischer Anteil $P_d = c_d \cdot F$ sinkt)
+        \item Achtung: Energieverbrauch steigt dabei aufgrund des statischen Anteils
+              ($\Delta E_a = \frac{1}{9} \cdot \frac{c_s \cdot c_a}{F} > 0$)
+    \end{itemize}
+
+    \item \textbf{Komponentenabschaltung:}
+    \begin{itemize}
+        \item Busschnittstelle abschalten, wenn RISC-Operationen auf
+              internen Registern arbeiten (Load-/Store-Architektur)
+        \item Nicht benötigte Leitungen der 64-Bit-Busschnittstelle abschalten
+              (bei Verwendung schmaler Datentypen)
+        \item Teile der ALU und der internen Datenpfade abschalten
+              (bei schmalen Datentypen)
+        \item Allgemein: nicht benötigte Komponenten abschalten
+    \end{itemize}
+
+    \item \textbf{Spannungsreduktion:}
+    \begin{itemize}
+        \item SRAM-Versorgungsspannung so weit reduzieren,
+              dass die Daten gerade noch aufrechterhalten bleiben
+    \end{itemize}
+
+    \item \textbf{Mindesttaktfrequenz:}
+    \begin{itemize}
+        \item Bei dynamischem Steuerwerk (kein statisches Steuerwerk)
+              muss eine Mindesttaktfrequenz eingehalten werden
+    \end{itemize}
+
+    \item \textbf{Erhöhung der Codedichte durch CISC-Architektur:}
+    \begin{itemize}
+        \item CISC besitzt umfangreichen Befehlssatz $\Rightarrow$
+              höhere Codedichte erreichbar
+        \item Höhere Codedichte reduziert Speicherzugriffe
+              $\Rightarrow$ weniger Energieverbrauch beim Speicher
+        \item RISC besitzt reduzierten Befehlssatz $\Rightarrow$
+              geringere Codedichte
+    \end{itemize}
+\end{itemize}
