@@ -1,0 +1,88 @@
+\section{Adressierung}
+\begin{itemize}
+    \item \textbf{Isolierte Adressierung:}
+    \begin{itemize}
+        \item Zwei separate Adressräume für Speicher und E/A
+        \item Für Speicher nutzbare Adressen nicht durch E/A-Einheiten verringert
+        \item E/A-Adressraum ist kleiner als Speicheradressraum
+        \item Eigenen Befehle für Zugriff auf E/A-Adressraum
+    \end{itemize}
+    \item \textbf{Gemeinsame Adressierung:}
+    \begin{itemize}
+        \item Gemeinsamer Adressraum für Speicher und E/A
+        \item Nicht hinter alles Adressen verbirgt sich Speicher
+        \item Alle Befehle und Adressierungsarten für E/A sowie Speicher nutzbar
+    \end{itemize}
+\end{itemize}
+
+\section{Pipelining}
+\begin{itemize}
+    \item Pipelining lässt mehrere Befehle gleichzeitig in verschiedenen Verarbeitungsstufen laufen, um den CPU-Durchsatz zu erhöhen.
+    \item Pipelining ohne Beachtung von Datenabhängigkeiten führt zu falschen Registerwerten\\$\rightarrow$ Einfügen von NOOPs zur Behebung
+    \item Je nach Prozessorarchitektur von Compiler oder CPU direkt durchgeführt
+    \item Nutzung problematisch für Echtzeitsysteme, da Analyse des Worst-Case komplexer
+\end{itemize}
+
+\section{Sprungvorhersage}
+\subsection*{Funktionsweise}
+\begin{itemize}
+    \item Sprungrichtung eines bedingten Sprunges vorhersagen, weil benötigte Werte noch nicht berechnet sind
+    \item Statische Vorhersage besser geeignet für Echtzeitsysteme, da besser analysierbar
+    \item Wenn Vorhersage falsch war:
+    \begin{itemize}
+        \item Bereits ausgeführte Sprünge rückgängig machen
+        \item Mit tatsächlichem Sprungziel und leerer Pipeline erneut beginnen
+    \end{itemize}
+    \item \textbf{Statische Sprungvorhersage:}
+    \begin{itemize}
+        \item Immer gleiche Entscheidung treffen (\textit{z.B. Sprünge nach hinten immer, Sprünge nach vorne nie})
+        \item Vorteil: Einfach zu implementieren
+        \item Nachteil: Trefferquote meistens schlecht
+    \end{itemize}
+    \item \textbf{Dynamische Sprungvorhersage:}
+    \begin{itemize}
+        \item Vorhersage abhängig vom Verlauf der bisherigen Sprünge (\textit{z.B. 1- oder 2-Bit Prädiktoren})
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Prädiktoren}
+\begin{itemize}
+    \item \textbf{1-Bit-Prädiktor} \\
+    \includegraphics[width=0.5\textwidth]{images/1bit_predictor.png}
+    \begin{itemize}
+        \item Zustände: Taken (T) \& Not Taken (NT)
+        \item Idee: Nutze letzte tatsächliche Sprungrichtung als Vorhersage fürs nächste Mal
+        \item Nachteil: Hat Probleme mit geschachtelten Schleifen
+    \end{itemize}
+    \item \textbf{2-Bit-Prädiktor} \\
+    \includegraphics[width=0.95\textwidth]{images/2bit_predictor.png}
+    \begin{itemize}
+        \item Zustände: Strongly Taken (ST), Taken (T), Not Taken (NT), Strongly Not Taken (SNT)
+        \item ST/SNT: Zwei Fehlvorhersagen nötig für Wechsel der Vorhersage, ansonsten eine Fehlvorhersage
+        \item Vorteil: Besseres Verhalten bei geschachtelten Schleifen als 1-Bit-Prädiktor
+    \end{itemize}
+\end{itemize}
+
+\section{Datenkodierung}
+\includegraphics[width=\textwidth]{images/datenkodierung.png}
+\subsection*{NRZ (Non-Return-to-Zero)}
+\begin{itemize}
+    \item leichter Verlust der Taktsynchronität bei aufeinanderfolgenden Einsen oder Nullen
+\end{itemize}
+
+\subsection*{FM (Frequency Modulation)}
+\begin{itemize}
+    \item Takterhaltende Codierung, Vorangestellt eines Taktbits
+\end{itemize}
+
+\subsection*{MFM (Modified Frequency Modulation)}
+\begin{itemize}
+    \item Halbiert Aufwand von FM durch bedingtes Voranstellen eines Taktbits
+    \item Taktbit nur, wenn aktuelles und vorheriges Datenbit beide 0
+\end{itemize}
+
+\subsection*{Manchester Biphase}
+\begin{itemize}
+    \item Signalpegel wechselt grundsätzlich bei jeder Taktflanke
+    \item Stimmt der resultierende Wert nicht mit dem Bitwert überein $\Rightarrow$ zweiter Wechsel
+\end{itemize}
