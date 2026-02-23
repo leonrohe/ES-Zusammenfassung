@@ -1,0 +1,80 @@
+\section{Klassifizierung von Echtzeitsystemen}
+
+\textbf{Harte Zeitschranken}
+\begin{itemize}
+    \item System muss Zeitschranke einhalten, bei Überschreiten entsteht Schade
+    \item \textit{z.B. Radarabtastung bei Flugzeug}
+\end{itemize}
+
+\textbf{Feste Zeitschranken}
+\begin{itemize}
+    \item Kein Schaden bei Überschreitung, Ergebnis aber wertlos
+    \item[$\rightarrow$] Überschreitung führt zum Abbruch der ausgeführten Aktion
+    \item \textit{z.B. Anzeige der Fahrtzeiten des öffentlichen Nahverkehrs}
+\end{itemize}
+
+\textbf{Weiche Zeitschranken}
+\begin{itemize}
+    \item Zeitschranken eher als Richtwert und bis zu gewissem Grad überschreitbar
+    \item \textit{z.B. Temperaturregelung eines Kühlschrankes}
+\end{itemize} 
+
+\section{Endliche Automaten}
+\textbf{Funktionen}
+\begin{itemize}
+    \item modellieren Verhalten eines Systems
+    \item beschreiben aktionen, Zustände und Zustandsübergänge
+\end{itemize}
+
+\textbf{Moore vs. Mealy}
+\begin{table}[h]
+    \begin{tabular}{@{} m{6cm} m{6cm} @{}}
+        \toprule
+        \textbf{Moore-Automat} & \textbf{Mealy-Automat} \\
+        \midrule
+        Eingabealphabet: $\Sigma$ & Eingabealphabet: $\Sigma$ \\
+        Übergangsfunktion: $\delta: Z \times \Sigma \to Z$ & Übergangsfunktion: $\delta: Z \times \Sigma \to Z$ \\
+        Ausgabefunktion: $\lambda: Z \to \Delta$ & Ausgabefunktion: $\lambda: Z \times \Sigma \to \Delta$ \\
+        Startzustand: $z_0 \in Z$ & Startzustand: $z_0 \in Z$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Petrinetze}
+\textbf{Funktionen}
+\begin{itemize}
+    \item Modellierung nebenläufiger Prozesse
+    \item Petri-Netz als 6-Tupel $(S, T, F, K, W, m_{0})$
+    \begin{itemize}
+        \item \textbf{S:} nichtleere, endliche Menge von Stellen
+        \item \textbf{T:} nichtleere, endliche Menge von Transitionen
+        \item \textbf{F:} nichtleere, endliche Menge von Kanten; F $\in (S \times T)$
+        \item \textbf{K:} Kapazitäten der Stellen
+        \item \textbf{W:} Kosten von Kanten
+        \item \textbf{$m_0$} Startmarkierung des Netzes
+    \end{itemize}
+    \item Das 3-Tupel $(S, T, F)$ ist ein bipartiter und gerichteter Graph
+\end{itemize}
+
+\textbf{Beispiel Petrinetz}\\
+\includegraphics[width=\textwidth]{images/petrinetz.png}
+
+\section{Steuerung und Regelung}
+\textbf{Unterschied}
+\begin{itemize}
+    \item \textbf{Steuerung:} Steuerung von Strecke durch Steuerglied, ohne unvorhergesehenes Streckenverhalten zu berücksichtigen
+    \item \textbf{Regelung:} Steuerung von Strecke durch Regler unter Berücksichtigung des Streckenverhaltens (Rückkopplung), um ein Regelziel (Sollwert) zu erreichen
+\end{itemize}
+
+\textbf{Übertragungsfunktionen}
+\begin{itemize}
+    \item \textbf{Reihenschaltung:} \\
+    \includegraphics[width=0.5\linewidth]{images/reihe_vorher.png}
+    \includegraphics[width=0.5\linewidth]{images/reihe_nachher.png}
+    \item \textbf{Parallelschaltung:} \\
+    \includegraphics[width=0.5\linewidth]{images/parallel_vorher.png}
+    \includegraphics[width=0.5\linewidth]{images/parallel_nachher.png}
+    \item \textbf{Gegenkopplung:} \\
+    \includegraphics[width=0.5\linewidth]{images/gegen_vorher.png}
+    \includegraphics[width=0.5\linewidth]{images/gegen_nachher.png}
+\end{itemize}
