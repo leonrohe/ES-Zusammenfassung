@@ -1,0 +1,44 @@
+\section{AD-Wandlung}
+\subsection*{Formeln}
+\begin{itemize}
+    \item $U_{LSB} = \frac{U_{max}-U_{\text{min}}}{2^n}$
+    \item Quantisierungsfehler: \\
+    $U_{QF} = \text{diskretisierte Spannung} - \text{tatsächliche Spannung} = Z \cdot U_{LSB} - U_{in}$ \\
+    $\overline{U_{QF}} = -0.5U_{LSB}$ solange $Z$ abgerundet wird
+\end{itemize}
+
+\subsection*{Wägerverfahren}
+\begin{center}
+    \includegraphics[width=0.49\textwidth]{images/waegerverfahren.png}
+    \includegraphics[width=0.49\textwidth]{images/waegerverfahren_bsp.png}
+\end{center}
+\begin{itemize}
+    \item Verwendet sukzessive Approximation:
+    \begin{itemize}
+        \item Zu Beginn: $Z = 100...0_2$, also $U_g(Z) = 2^{n-1} \cdot U_{LSB}$
+        \item $U_g(Z) > U_{in}$: \\
+        Aktuelles Bit auf 0 setzen, Bit mit nächstkleinerer Wertigkeit auf 1 setzen
+        \item $U_g(Z) \leq U_{in}$ \\
+        Bit mit nächstkleinerer Wertigkeit auf 1 setzen
+        \item Für alle n-Bits werden n Schritte benötigt
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Abtast-/Halteglied}
+\begin{center}
+    \includegraphics[width=0.6\textwidth]{images/halteglied.png}
+\end{center}
+
+\begin{itemize}
+    \item Hält das Eingabesignal über die Dauer der Wandlung konstant $\Rightarrow$ verhindert Signaländerung während der n Wandlunsschritte
+    \item Schalter S wird bei Abtastung geschlossen
+    \begin{itemize}
+        \item Operationsverstärker entkoppelt das Abtastglied vom Eingang
+        \item Kondensator wird mit $U_e$ aufgeladen
+    \end{itemize}
+    \item Danach wird Schalter S wieder geöffnet
+    \begin{itemize}
+        \item Kondensator bleibt geladen, da $U_a$ vom Operationsverstärker entkoppelt wird
+        \item Signal kann abgetastet werden
+    \end{itemize}
+\end{itemize}
