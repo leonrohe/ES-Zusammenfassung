@@ -56,12 +56,8 @@
 
 \subsection*{Fehlerkorrektur}
 \begin{itemize}
-    \item \textbf{Nullpunktfehler:} Kennlinie parallel zur Idealkurve, aber verschoben
-          $\Rightarrow$ Korrektur durch Subtraktion eines Offsets $U_0$
-    \item \textbf{Vollausschlagfehler:} Abweichende Steigung $\frac{\Delta U}{\Delta Z}$
-          $\Rightarrow$ Korrektur durch Multiplikation mit Faktor $c$
-    \item \textbf{Nichtlinearitätsfehler:} entstehen durch Bauteil-Toleranzen und
-          Temperaturabhängigkeiten -- entziehen sich linearer Kompensation und erfordern
-          aufwändigere Kalibrierverfahren
+    \item \textbf{Vollausschlagfehler:} Abweichende Steigung $\frac{\Delta U}{\Delta Z}$ $\Rightarrow$ Korrektur durch Multiplikation mit Faktor $c := \frac{\text{ideale Steigung}}{\text{gemessene Steigung}}$
+    \item \textbf{Nullpunktfehler:} Kennlinie parallel zur Idealkurve, aber verschoben $\Rightarrow$ Korrektur durch Subtraktion eines Offsets $U_0$
+    \item \textbf{Nichtlinearitätsfehler:} entstehen durch Bauteil-Toleranzen und Temperaturabhängigkeiten -- entziehen sich linearer Kompensation und erfordern aufwändigere Kalibrierverfahren
 \end{itemize}
 
