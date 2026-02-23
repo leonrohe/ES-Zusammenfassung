@@ -1,0 +1,20 @@
+# Auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+
+# Sync & build
+*.synctex.gz
+*.synctex(busy)
+
+# Bibliography
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# Compiled output (uncomment if PDF should not be tracked)
+*.pdf
