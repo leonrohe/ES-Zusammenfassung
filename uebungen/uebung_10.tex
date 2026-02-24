@@ -1,0 +1,97 @@
+\section{Tasksynchronisation}
+
+\subsection*{Verklemmungen}
+
+\begin{itemize}
+    \setlength{\itemsep}{4pt}
+
+    \item \textbf{Deadlock} -- zwei oder mehr Tasks blockieren sich gegenseitig:
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Jede Task wartet auf ein Betriebsmittel, das von einer anderen Task gehalten wird
+        \item Kein Fortschreiten der beteiligten Tasks möglich
+    \end{itemize}
+
+    \item \textbf{Livelock} -- eine Task wird durch andere Tasks ständig an der Ausführung gehindert:
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Sonderfall: Livelock durch \textbf{Prioritätsinversion} -- hochpriore Task muss auf niederpriore Task warten (z.B.\ wegen gemeinsamer Ressource)
+    \end{itemize}
+
+\end{itemize}
+
+\subsection*{Synchronisationsmittel}
+
+\begin{itemize}
+    \setlength{\itemsep}{4pt}
+
+    \item \textbf{Semaphor} -- Zählvariable zur Ressourcenverwaltung:
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Initialisierung beliebig; Maximalwert beliebig
+        \item \textit{Passieren}: Dekrementieren; blockieren, falls Wert $< 0$
+        \item \textit{Verlassen}: Inkrementieren; ggf.\ wartende Task freigeben
+        \item Passieren und Verlassen müssen nicht von derselben Task durchgeführt werden $\Rightarrow$ Reihenfolgensynchronisation möglich
+    \end{itemize}
+
+    \item \textbf{Mutex} -- binäres Sperrmittel mit Eigentümerkonzept:
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Initial immer frei; Maximalwert 1 -- höchstens eine Task gleichzeitig im kritischen Abschnitt
+        \item \textit{Sperren}: Blockieren bis frei, dann auf belegt setzen
+        \item \textit{Freigeben}: Nur durch die Task möglich, die den Mutex zuvor gesperrt hat (\textit{ownership})
+        \item Häufig \textbf{wiedereintrittsfähig} (\textit{reentrant}): Eigentümer darf Mutex mehrfach sperren; Freigabe erst durch letzte Entsperrung
+        \item Keine Reihenfolgensynchronisation möglich; Erzeuger-/Verbraucher-Muster nicht realisierbar
+    \end{itemize}
+
+\end{itemize}
+
+\section{Echtzeitbetriebssysteme}
+
+\subsection*{Aufgaben}
+
+\begin{itemize}
+    \setlength{\itemsep}{4pt}
+
+    \item \textbf{Standardbetriebssystem:}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Taskverwaltung (Prozessorzuteilung)
+        \item Betriebsmittelverwaltung (Speicher, I/O)
+        \item Interprozesskommunikation
+        \item Synchronisation
+        \item Schutzmaßnahmen
+    \end{itemize}
+
+    \item \textbf{Zusätzlich im Echtzeitbetriebssystem:}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Wahrung der Rechtzeitigkeit und Gleichzeitigkeit -- Daten müssen rechtzeitig abgeholt, verarbeitet und ausgegeben werden
+        \item Wahrung der Verfügbarkeit -- keine unvorhersehbaren Unterbrechungen des Betriebs
+    \end{itemize}
+
+\end{itemize}
+
+\subsection*{Kernarchitekturen}
+
+\begin{itemize}
+    \setlength{\itemsep}{4pt}
+
+    \item \textbf{Makrokernbetriebssystem} -- umfangreiche Funktionalität im \textit{kernel mode}:
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Taskverwaltung inkl.\ Scheduling, Speicherverwaltung, IPC, Synchronisation, Treiber
+        \item Moderner Ansatz: hierarchische Schichten statt monolithischem Block
+        \item Nachteil: Schlechte zeitliche Vorhersagbarkeit durch lange kritische Bereiche
+    \end{itemize}
+
+    \item \textbf{Mikrokernbetriebssystem} -- schlanker Kern im \textit{kernel mode}:
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Nur IPC, elementare Taskverwaltung (kein Scheduling), Synchronisation und Speicherverwaltung im Kern
+        \item Alle übrigen Funktionen als Module im \textit{user mode}
+        \item \textbf{Vorteile:} Hohe Anpass- und Skalierbarkeit, einfache Portierbarkeit, bessere zeitliche Vorhersagbarkeit, ggf.\ formale Verifikation möglich (z.B.\ seL4)
+        \item \textbf{Nachteil:} Häufige Kontextwechsel zwischen \textit{user mode} und \textit{kernel mode} -- IPC und Kontextwechsel müssen daher sehr schnell sein
+    \end{itemize}
+
+\end{itemize}
