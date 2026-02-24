@@ -39,6 +39,16 @@
     \item \textbf{Lösung:} DMA-Controller benötigt Puffer zum Zerlegen/Zusammenfügen, muss unterschiedliche Wortbreiten erkennen und Adresszähler korrekt inkrementieren \\ \textit{Bsp.: 4-Byte-Quelle, 2-Byte-Ziel $\Rightarrow$ Zähler um 1 (Quelle) bzw. 2 (Ziel) erhöhen}
 \end{itemize}
 
+\subsection*{Arten des DMA Transfer}
+\begin{itemize}
+    \item \textbf{Einzeltransfer}\\
+    \includegraphics[width=\textwidth]{images/einzeltransfer.png}
+    \item \textbf{Blocktransfer}\\
+    \includegraphics[width=\textwidth]{images/blocktransfer.png}
+    \item \textbf{Transfer auf Aufforderung}\\
+    \includegraphics[width=\textwidth]{images/aufforderungstransfer.png}
+\end{itemize}
+
 \section{Abtastrate}
 \begin{itemize}
     \item Gemäß dem \textbf{Abtasttheorem} muss ein Signal mit mehr als der doppelten
