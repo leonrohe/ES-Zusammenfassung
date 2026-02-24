@@ -1,23 +1,53 @@
-\section{Klassifizierung von Echtzeitsystemen}
+\section{Echtzeitsystemen}
 
-\textbf{Harte Zeitschranken}
+\subsection*{Anforderungen}
 \begin{itemize}
-    \item System muss Zeitschranke einhalten, bei Überschreiten entsteht Schade
-    \item \textit{z.B. Radarabtastung bei Flugzeug}
+    \item Logische Korrektheit
+    \item Zeitliche Korrektheit
+    \begin{itemize}
+        \item Rechtzeitigkeit: Ausgabedaten müssen rechtzeitig berechnet werden und zur Verfügung stehen
+        \item Gleichzeitigkeit: Gewährleistung der Rechtzeitigkeit für mehrere Aktionen
+        \item Verfügbarkeit: Echtzeitsystem muss ohne Unterbrechung über längeren Zeitraum verfügbar sein
+    \end{itemize}
+    \item Ergebnis nur dann korrekt, wenn logisch \textbf{und} zeitlich Korrekt
 \end{itemize}
 
-\textbf{Feste Zeitschranken}
+\subsection*{Zeitschranken}
 \begin{itemize}
-    \item Kein Schaden bei Überschreitung, Ergebnis aber wertlos
-    \item[$\rightarrow$] Überschreitung führt zum Abbruch der ausgeführten Aktion
-    \item \textit{z.B. Anzeige der Fahrtzeiten des öffentlichen Nahverkehrs}
+    \item \textbf{Harte Zeitschranken}
+    \begin{itemize}
+        \item System muss Zeitschranke einhalten, bei Überschreiten entsteht Schade
+        \item \textit{z.B. Radarabtastung bei Flugzeug}
+    \end{itemize}
+    
+    \item \textbf{Feste Zeitschranken}
+    \begin{itemize}
+        \item Kein Schaden bei Überschreitung, Ergebnis aber wertlos
+        \item[$\rightarrow$] Überschreitung führt zum Abbruch der ausgeführten Aktion
+        \item \textit{z.B. Anzeige der Fahrtzeiten des öffentlichen Nahverkehrs}
+    \end{itemize}
+    
+    \item \textbf{Weiche Zeitschranken}
+    \begin{itemize}
+        \item Zeitschranken eher als Richtwert und bis zu gewissem Grad überschreitbar
+        \item \textit{z.B. Temperaturregelung eines Kühlschrankes}
+    \end{itemize} 
 \end{itemize}
 
-\textbf{Weiche Zeitschranken}
-\begin{itemize}
-    \item Zeitschranken eher als Richtwert und bis zu gewissem Grad überschreitbar
-    \item \textit{z.B. Temperaturregelung eines Kühlschrankes}
-\end{itemize} 
+\begin{figure}[H]
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\linewidth]{images/weiche_zeitschranke.png}
+        \caption{Weiche Zeitschranke}
+    \end{subfigure}
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\linewidth]{images/feste_zeitschranke.png}
+        \caption{Feste Zeitschranke}
+    \end{subfigure}
+    \begin{subfigure}{0.33\textwidth}
+        \includegraphics[width=\linewidth]{images/harte_zeitschranke.png}
+        \caption{Harte Zeitschranke}
+    \end{subfigure}
+\end{figure}
 
 \section{Endliche Automaten}
 \subsection*{Funktionen}
@@ -71,9 +101,9 @@
     \includegraphics[width=0.5\linewidth]{images/reihe_vorher.png}
     \includegraphics[width=0.5\linewidth]{images/reihe_nachher.png}
     \item \textbf{Parallelschaltung:} \\
-    \includegraphics[width=0.5\linewidth]{images/parallel_vorher.png}
+    \includegraphics[width=0.4\linewidth]{images/parallel_vorher.png}
     \includegraphics[width=0.5\linewidth]{images/parallel_nachher.png}
     \item \textbf{Gegenkopplung:} \\
-    \includegraphics[width=0.5\linewidth]{images/gegen_vorher.png}
-    \includegraphics[width=0.5\linewidth]{images/gegen_nachher.png}
+    \includegraphics[width=0.45\linewidth]{images/gegen_vorher.png}
+    \includegraphics[width=0.45\linewidth]{images/gegen_nachher.png}
 \end{itemize}

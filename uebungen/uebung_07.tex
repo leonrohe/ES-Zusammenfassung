@@ -1,0 +1,97 @@
+\section{Echtzeitprogrammierung}
+\subsection*{Programmiermodelle}
+\begin{itemize}
+    \item \textbf{Synchrone Programmierung} -- Tasks werden rein periodisch und deterministisch ausgeführt; Ablaufplan wird offline fest berechnet und zur Laufzeit nur abgearbeitet
+    \item \textbf{Asynchrone Programmierung} -- Kombination aus periodischen und ereignisgesteuerten Tasks; ermöglicht Reaktion auf nicht-periodische Ereignisse (z.B.\ Warnsignal bei erkanntem Hindernis)
+\end{itemize}
+
+\subsection*{Task-Parameter}
+\begin{itemize}
+    \item \textbf{Periode} $\tau_i$ -- Zeitabstand zwischen zwei aufeinanderfolgenden Aktivierungen einer Task
+    \item \textbf{Ausführungsdauer} $e_i$ -- Benötigte Rechenzeit pro Instanz (im Worst Case: WCET)
+    \item \textbf{Prozessorauslastung} -- Anteil der Zeit, in der der Prozessor Tasks ausführt:
+    \begin{itemize}
+        \item Einzelne Task: $h_i = \dfrac{e_i}{\tau_i}$
+        \item Gesamtauslastung: $H = \sum_{i=1}^{n} \dfrac{e_i}{\tau_i}$
+        \item $H > 1$: Prozessor hat strukturell nicht genug Zeit, alle Tasks fristgerecht auszuführen
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Voraussetzungen für gültiges Scheduling}
+\begin{itemize}
+    \item \textbf{Keine Überlastung:} $H \leq 1$ -- gilt allgemein für alle Scheduling-Verfahren
+    \item \textbf{Harmonische Perioden} (nur synchrone Programmierung): Jede Taskperiode ist ein ganzzahliges Vielfaches der nächst kürzeren Periode -- Verletzung führt zu Kollisionen im Ausführungsplan
+\end{itemize}
+
+\subsection*{Scheduling-Verfahren}
+\includegraphics[width=\textwidth]{images/scheduling.png}
+\begin{itemize}
+    \setlength{\itemsep}{4pt}
+
+    \item \textbf{FIFO-Scheduling}
+    \hfill \small\textit{dynamisch | nicht-präemptiv | nicht prioritätsbasiert}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Tasks werden in Ankunftsreihenfolge abgearbeitet
+        \item Berücksichtigt keinerlei Zeitbedingungen der Tasks
+        \item Ungeeignet für Echtzeitsysteme -- gilt allgemein für alle nicht-präemptiven Verfahren
+    \end{itemize}
+
+    \item \textbf{Fixed-Priority-Preemptive-Scheduling (FPP)}
+    \hfill \small\textit{dynamisch | präemptiv | statische Prioritäten}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Jede Task erhält eine feste, unveränderliche Priorität $p(T)$
+        \item Wird eine höherpriore Task aktiviert, unterbricht (\textit{preempts}) sie sofort die laufende niederpriore Task
+        \item Unterbrochene Task wird nach Abschluss der höherprioren Task fortgesetzt
+        \item Korrekte Prioritätsvergabe entscheidend -- falsche Priorisierung kann Deadlines gefährden
+    \end{itemize}
+
+    \item \textbf{Fixed-Priority-Non-Preemptive-Scheduling (FPN)}
+    \hfill \small\textit{dynamisch | nicht-präemptiv | statische Prioritäten}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Wie FPP, aber ohne Unterbrechung
+        \item Laufende Task wird stets vollständig ausgeführt, bevor höherpriore Task startet
+        \item Kann gültige Schedules verfehlen, die FPP noch finden würde
+    \end{itemize}
+
+    \item \textbf{Rate-Monotonic-Scheduling (RMS)}
+    \hfill \small\textit{dynamisch | präemptiv | statische Prioritäten}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Prioritätsvergabe nach Periodendauer: kurze Periodendauer $\Rightarrow$ hohe Priorität ($p(T) \propto \frac{1}{\tau_T}$)
+        \item Wird zusammen mit FPP eingesetzt (RMS+FPP)
+        \item Garantierter gültiger Schedule, wenn $H \leq H_{\text{max}}$:
+            \[ H_{\text{max}} = n \cdot (2^{1/n} - 1) \]
+        \item Überschreitung von $H_{\text{max}}$ schließt gültigen Schedule nicht aus -- Busy-Period-Analyse nötig: Wird bis zum ersten Ruhezustand keine Deadline verletzt, so gilt dies auch für alle zukünftigen Instanzen
+    \end{itemize}
+
+    \item \textbf{Guaranteed-Percentage-Scheduling (GP)}
+    \hfill \small\textit{dynamisch | präemptiv | nicht prioritätsbasiert}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Jeder Task wird ein fester Prozentsatz der Rechenzeit garantiert
+        \item Innerhalb einer GP-Periode erhält jede Task ihren Anteil $h_i \cdot T_{GP}$ an Rechenzeit
+        \item GP-Periode muss \textbf{kleiner} als alle Task-Perioden sein -- sonst können Deadlines verletzt werden
+        \item Verhalten stark implementierungsabhängig; Reihenfolge der Taskausführung innerhalb der GP-Periode entscheidend
+    \end{itemize}
+
+    \item \textbf{Earliest-Deadline-First-Scheduling (EDF)}
+    \hfill \small\textit{dynamisch | präemptiv | dynamische Prioritäten}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Task mit der nächstliegenden Deadline erhält stets die höchste Priorität
+        \item Auf Einprozessorsystemen \textbf{optimal}: Liefert einen gültigen Schedule, wenn $H \leq 100\,\%$
+        \item Auf Mehrprozessorsystemen nicht optimal -- globales EDF kann trotz $H < 200\,\%$ Deadlines verfehlen (\textit{Dhall-Effekt})
+    \end{itemize}
+
+    \item \textbf{Least-Laxity-First-Scheduling (LLF)}
+    \hfill \small\textit{dynamisch | präemptiv | dynamische Prioritäten}
+    \begin{itemize}
+        \setlength{\itemsep}{2pt}
+        \item Task mit der kleinsten Laxity (Schlupfzeit) wird zuerst ausgeführt: $l_i := d_i - (t + er_i)$
+        \item Wird $T_i$ ausgeführt, bleibt $l_i$ konstant; wird $T_i$ \textit{nicht} ausgeführt, sinkt $l_i$
+    \end{itemize}
+
+\end{itemize}
