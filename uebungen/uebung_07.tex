@@ -73,6 +73,7 @@
         \setlength{\itemsep}{2pt}
         \item Jeder Task wird ein fester Prozentsatz der Rechenzeit garantiert
         \item Innerhalb einer GP-Periode erhält jede Task ihren Anteil $h_i \cdot T_{GP}$ an Rechenzeit
+        \item Auf Einprozessorsystemen \textbf{optimal}: Liefert einen gültigen Schedule, wenn $H \leq 100\,\%$
         \item GP-Periode muss \textbf{kleiner} als alle Task-Perioden sein -- sonst können Deadlines verletzt werden
         \item Verhalten stark implementierungsabhängig; Reihenfolge der Taskausführung innerhalb der GP-Periode entscheidend
     \end{itemize}
@@ -92,6 +93,7 @@
         \setlength{\itemsep}{2pt}
         \item Task mit der kleinsten Laxity (Schlupfzeit) wird zuerst ausgeführt: $l_i := d_i - (t + er_i)$
         \item Wird $T_i$ ausgeführt, bleibt $l_i$ konstant; wird $T_i$ \textit{nicht} ausgeführt, sinkt $l_i$
+        \item Auf Einprozessorsystemen \textbf{optimal}: Liefert einen gültigen Schedule, wenn $H \leq 100\,\%$
     \end{itemize}
 
 \end{itemize}
